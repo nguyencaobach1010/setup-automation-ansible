@@ -7,8 +7,14 @@ nodes = {
 }
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "bachnc/rhel9"
+  config.vm.box = "bachnc/rhel9.4"
+  config.env.enable
   config.ssh.username = "sysadmin"
+  if Vagrant.has_plugin?('vagrant-registration')
+    config.registration.username = ENV['REDHAT_USERNAME']
+    config.registration.password = ENV['REDHAT_PASSWORD']
+  end
+  config.vm.box_version = "9.4"
   nodes.each do |prefix, (count, ip_start)|
     count.times do |i|
       hostname = "%s" % [prefix, (i+1)]
@@ -38,4 +44,6 @@ Vagrant.configure("2") do |config|
       end
     end
   end
+  # Install Docker
+  config.vm.provision "shell", path: "./install_docker.sh"
 end

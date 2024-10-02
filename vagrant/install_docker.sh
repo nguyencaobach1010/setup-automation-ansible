@@ -29,11 +29,12 @@ systemctl start docker
 systemctl enable docker
 
 # Add current user to docker group (to run docker without sudo)
-echo "Adding user $current_user to docker group..."
+echo "Adding user sysadmin to docker group..."
 sudo groupadd docker
-sudo usermod -aG docker $USER
+sudo usermod -aG docker sysadmin
 
 #Log out and log back in so that your group membership is re-evaluated.
+echo "activate the changes to groups"
 newgrp docker
 
 #Verify that you can run docker commands without sudo.

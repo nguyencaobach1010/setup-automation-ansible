@@ -12,7 +12,7 @@ packer {
 }
 
 source "vmware-vmx" "vmware" {
-  source_path      = "/Users/dillydo/Virtual Machines.localized/Red Hat Enterprise Linux 9 64-bit Arm.vmwarevm/Red Hat Enterprise Linux 9 64-bit Arm.vmx"
+  source_path      = "/Users/dillydo/Virtual Machines.localized/RHEL_9_64-bit_Arm.vmwarevm/RHEL_9_64-bit_Arm.vmx"
   communicator     = "ssh"
   ssh_username     = "vagrant"
   ssh_password     = "vagrant"

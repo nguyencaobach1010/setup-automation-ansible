@@ -1,0 +1,6 @@
+haproxy_frontend_port: 80
+haproxy_backend_servers:
+  - name: k8s-1
+    address: 172.16.112.101
+#  - name: k8s-2
+#    address: 192.168.1.102

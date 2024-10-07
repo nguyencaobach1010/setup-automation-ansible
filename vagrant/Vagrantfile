@@ -21,6 +21,7 @@ SUPPORTED_OS = {
   "centos8"             => {box: "centos/8",                   user: "vagrant"},
   "centos8-bento"       => {box: "bento/centos-8",             user: "vagrant"},
   "rhel8"               => {box: "generic/rhel8",              user: "vagrant"},
+  "rhel9"               => {box: "generic/rhel9",              user: "vagrant"},
 }
 
 if File.exist?(CONFIG)
@@ -36,7 +37,7 @@ $vm_cpus ||= 2
 $shared_folders ||= {}
 $forwarded_ports ||= {}
 $subnet ||= "172.16.112"
-$subnet_ipv6 ||= "fd3c:b398:0698:0756"
+$subnet_ipv6 ||= "fe80::10f6:5509:351b:3ee6"
 $os ||= "ubuntu2004"
 $network_plugin ||= "flannel"
 # Setting multi_networking to true will install Multus: https://github.com/k8snetworkplumbingwg/multus-cni
@@ -53,7 +54,7 @@ $kube_node_instances ||= $num_instances
 $kube_node_instances_with_disks ||= false
 $kube_node_instances_with_disks_size ||= "30G"
 $kube_node_instances_with_disks_number ||= 2
-$override_disk_size ||= true
+$override_disk_size ||= false
 $disk_size ||= "30G"
 $local_path_provisioner_enabled ||= "False"
 $local_path_provisioner_claim_root ||= "/opt/local-path-provisioner/"
@@ -81,9 +82,9 @@ $box = SUPPORTED_OS[$os][:box]
 $inventory = "inventory/sample" if ! $inventory
 $inventory = File.absolute_path($inventory, File.dirname(__FILE__))
 
-# if $inventory has a hosts.ini file use it, otherwise copy over
+# if $inventory has a hosts.yml file use it, otherwise copy over
 # vars etc to where vagrant expects dynamic inventory to be
-if ! File.exist?(File.join(File.dirname($inventory), "hosts.ini"))
+if ! File.exist?(File.join(File.dirname($inventory), "hosts.yml"))
   $vagrant_ansible = File.join(File.absolute_path($vagrant_dir), "provisioners", "ansible")
   FileUtils.mkdir_p($vagrant_ansible) if ! File.exist?($vagrant_ansible)
   $vagrant_inventory = File.join($vagrant_ansible,"inventory")
@@ -132,7 +133,7 @@ Vagrant.configure("2") do |config|
         node.proxy.no_proxy = $no_proxy
       end
 
-      ["vmware_fusion", "vmware_workstation"].each do |vmware|
+      ["vmware_desktop"].each do |vmware|
         node.vm.provider vmware do |v|
           v.vmx['memsize'] = $vm_memory
           v.vmx['numvcpus'] = $vm_cpus
@@ -170,7 +171,7 @@ Vagrant.configure("2") do |config|
         node.vm.network "forwarded_port", guest: guest, host: host, auto_correct: true
       end
 
-      if ["rhel7","rhel8"].include? $os
+      if ["rhel7","rhel8","rhel9"].include? $os
         # Vagrant synced_folder rsync options cannot be used for RHEL boxes as Rsync package cannot
         # be installed until the host is registered with a valid Red Hat support subscription
         node.vm.synced_folder ".", "/vagrant", disabled: false
@@ -238,7 +239,7 @@ Vagrant.configure("2") do |config|
           ansible.playbook = $playbook
           ansible.compatibility_mode = "2.0"
           ansible.verbose = $ansible_verbosity
-          $ansible_inventory_path = File.join( $inventory, "hosts.ini")
+          $ansible_inventory_path = File.join( $inventory, "hosts.yml")
           if File.exist?($ansible_inventory_path)
             ansible.inventory_path = $ansible_inventory_path
           end

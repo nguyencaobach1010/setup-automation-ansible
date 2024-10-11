@@ -1,0 +1,6 @@
+---
+- name: Install Helm
+  hosts: helm
+  become: yes
+  roles:
+    - helm

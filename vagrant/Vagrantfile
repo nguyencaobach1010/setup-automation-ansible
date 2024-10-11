@@ -21,7 +21,7 @@ SUPPORTED_OS = {
   "centos8"             => {box: "centos/8",                   user: "vagrant"},
   "centos8-bento"       => {box: "bento/centos-8",             user: "vagrant"},
   "rhel8"               => {box: "generic/rhel8",              user: "vagrant"},
-  "rhel9"               => {box: "generic/rhel9",              user: "vagrant"},
+  "rhel9"               => {box: "xandradx/generic-rhel9-vmware-aarch64",              user: "vagrant"},
 }
 
 if File.exist?(CONFIG)
@@ -29,7 +29,7 @@ if File.exist?(CONFIG)
 end
 
 # Defaults for config options defined in CONFIG
-$num_instances ||= 3
+$num_instances ||= 1
 $instance_name_prefix ||= "k8s"
 $vm_gui ||= true
 $vm_memory ||= 2048
@@ -65,7 +65,7 @@ $ansible_tags ||= ENV['VAGRANT_ANSIBLE_TAGS'] || ""
 
 $vagrant_dir ||= File.join(File.dirname(__FILE__), ".vagrant")
 
-$playbook ||= "cluster.yml"
+# $playbook ||= "cluster.yml"
 $extra_vars ||= {}
 
 host_vars = {}

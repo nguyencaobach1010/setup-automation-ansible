@@ -1,0 +1,24 @@
+---
+- name: Install Keepalived (RedHat)
+  yum:
+    name: keepalived
+    state: present
+  when: ansible_os_family == "RedHat"
+
+- name: Install Keepalived (Ubuntu)
+  apt:
+    name: keepalived
+    state: present
+  when: ansible_os_family == "Ubuntu"
+
+- name: Configure Keepalived
+  template:
+    src: keepalived.conf.j2
+    dest: /etc/keepalived/keepalived.conf
+  notify: Restart Keepalived
+
+- name: Enable and start Keepalived service
+  systemd:
+    name: keepalived
+    enabled: yes
+    state: started

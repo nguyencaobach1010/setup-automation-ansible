@@ -1,0 +1,8 @@
+---
+keepalived_interface: ens160
+keepalived_router_id: 51
+
+keepalived_user: plm
+keepalived_pass: adminplm
+
+keepalived_virtual_ip: 172.16.112.99

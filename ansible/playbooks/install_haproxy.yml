@@ -1,6 +1,6 @@
 ---
 - name: Install and Configure HAProxy
-  hosts: load_balancers
+  hosts: haproxy
   become: yes
   roles:
     - haproxy

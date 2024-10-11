@@ -1,0 +1,6 @@
+---
+- name: Install and Configure Keepalived
+  hosts: keepalived
+  become: yes
+  roles:
+    - keepalived
